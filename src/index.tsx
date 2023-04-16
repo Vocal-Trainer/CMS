@@ -3,7 +3,6 @@ import ReactDOM from "react-dom";
 import "normalize.css";
 import { App } from "./App";
 import { AuthProvider } from "./context";
-import "./localization/i18next";
 
 ReactDOM.render(
   <React.StrictMode>

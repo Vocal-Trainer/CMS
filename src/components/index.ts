@@ -13,3 +13,4 @@ export * from "./FormModal";
 export * from "./FormEdit";
 export * from "./CropAndUpload";
 export * from "./ErrorFallback";
+export * from "./BackButton";
