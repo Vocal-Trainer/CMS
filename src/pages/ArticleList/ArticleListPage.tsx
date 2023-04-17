@@ -4,28 +4,26 @@ import { useArticles } from "../../context";
 import { BJColumnType } from "../../components/theme/molecules/BJTable";
 import { Sorter } from "../../components/theme/util/sorter";
 import BJList from "../../components/theme/components/BJList";
-import { changeorder } from "../../routes";
-import { Switch } from "antd";
 
-interface datasourceType extends FullArticle {
-  categorySw: string | undefined;
+interface DataSourceType extends Article {
+  key: string;
 }
 
 export const ArticleListPage = () => {
   const navigate = useNavigate();
   const { articles, loading } = useArticles();
-  const [originalTable, setOriginalTable] = useState<datasourceType[]>([]);
+  const [originalTable, setOriginalTable] = useState<DataSourceType[]>([]);
 
   useEffect(() => {
-    const articleTableSource: datasourceType[] = articles.map(article => ({
+    const articleTableSource: DataSourceType[] = articles.map(article => ({
       ...article,
       key: article.id,
-      categorySw: article.category?.translations?.sv?.title,
+      category: article.category,
     }));
     setOriginalTable(articleTableSource);
   }, [articles]);
 
-  const onClickRow = (record: datasourceType) => {
+  const onClickRow = (record: DataSourceType) => {
     return {
       onClick: () => {
         navigate(record.id);
@@ -37,7 +35,7 @@ export const ArticleListPage = () => {
     navigate("new");
   };
 
-  const columns: BJColumnType<datasourceType>[] = [
+  const columns: BJColumnType<DataSourceType>[] = [
     {
       title: "Title",
       dataIndex: "title",
@@ -51,7 +49,7 @@ export const ArticleListPage = () => {
     },
     {
       title: "Category",
-      dataIndex: "categorySw",
+      dataIndex: "category",
       key: "category",
       width: 1,
       ellipsis: true,
@@ -59,27 +57,11 @@ export const ArticleListPage = () => {
         compare: Sorter.DEFAULT,
       },
     },
-    {
-      title: "Restricted",
-      dataIndex: "restricted",
-      key: "restricted",
-      width: 0.5,
-      ellipsis: true,
-      sorter: {
-        compare: Sorter.DEFAULT,
-      },
-      render: (value: boolean) => (
-        <Switch checked={value} size="small" disabled />
-      ),
-    },
   ];
 
   return (
     <BJList
       loading={loading}
-      onChangeOrder={() => {
-        navigate(changeorder);
-      }}
       filterOnlyDisplayList
       addButtonCaption={"New Article"}
       title={"Article"}

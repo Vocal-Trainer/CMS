@@ -47,6 +47,7 @@ export const AuthProvider = ({ children }: any) => {
 
     const unsub = UserService.subscribe(authUser.uid, async (err, _user) => {
       if (err) {
+        console.log("err", err);
         throw err;
       }
       setUser(_user);
@@ -61,6 +62,7 @@ export const AuthProvider = ({ children }: any) => {
     setLoading(true);
 
     const unsub = firebase.auth().onAuthStateChanged(async _user => {
+      console.log("_user", _user);
       if (_user === null) {
         setAuthUser(null);
         setUser(null);
@@ -90,11 +92,9 @@ export const AuthProvider = ({ children }: any) => {
           currentUserToken.claims.admin ||
           currentUserToken.claims.analytic ||
           currentUserToken.claims.notificationHandler;
-        if (
-          userCredential === null ||
-          userCredential.user === null ||
-          !userAuthenticated
-        ) {
+        console.log("userCredential", userCredential);
+        console.log("userCredential", userCredential.user);
+        if (userCredential === null || userCredential.user === null) {
           setSigningIn(false);
           setUser(null);
           setAuthUser(null);

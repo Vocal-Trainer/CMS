@@ -12,11 +12,10 @@ import { BJMainLayout } from "./Layouts/MainLayout";
 import { LoginPage } from "./pages";
 import { ThemeProvider } from "styled-components";
 import { GlobalStyle } from "./components";
+import { CMSRoutes } from "./utils/routes";
 
 export const App = () => {
   const { user, loading } = useAuth();
-  const { isAdmin, isModerator, isAnalytic, isnotificationHandler } =
-    useAuthToken();
 
   if (loading) {
     return null;
@@ -31,8 +30,8 @@ export const App = () => {
             {!user ? (
               <Route path="/*" element={<LoginPage />} />
             ) : (
-              <Route path="/*" element={<BJMainLayout />}>
-                <Route path="*" element={<Navigate to="/cms" />} />
+              <Route path="*" element={<BJMainLayout />}>
+                <Route path="cms/*" element={<CMSRoutes />} />
               </Route>
             )}
           </Routes>

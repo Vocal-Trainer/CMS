@@ -9,11 +9,11 @@ import React, {
 import { ArticleService } from "../services";
 
 type ContextState = {
-  articles: FullArticle[];
-  categories: ArticleCategory[];
+  articles: Article[];
+  categories: string[];
   loading: boolean;
   error: Error | null;
-  getById: (id: Article["id"]) => FullArticle | null;
+  getById: (id: Article["id"]) => Article | null;
 };
 
 const ArticlesContext = createContext<ContextState>({
@@ -25,57 +25,23 @@ const ArticlesContext = createContext<ContextState>({
 });
 
 export const ArticlesProvider = ({ ...rest }) => {
-  const [articlesData, setArticlesData] = useState<Article[]>([]);
-  const [categoriesData, setCategoriesData] = useState<ArticleCategory[]>([]);
-  const [articles, setArticles] = useState<FullArticle[]>([]);
-  const [categories, setCategories] = useState<ArticleCategory[]>([]);
+  const [articles, setArticles] = useState<Article[]>([]);
   const [loadingArticles, setLoadingArticles] = useState(true);
-  const [loadingCategories, setLoadingCategories] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
     setLoadingArticles(true);
-    setLoadingCategories(true);
 
     const unsubArticles = ArticleService.subscribe((_error, _articles) => {
-      setArticlesData(_articles);
+      setArticles(_articles);
       setError(_error);
       setLoadingArticles(false);
     });
 
-    const unsubCategories = ArticleService.subscribeToCategories(
-      (_error, _categories) => {
-        setCategoriesData(_categories);
-        setError(_error);
-        setLoadingCategories(false);
-      }
-    );
-
     return () => {
       unsubArticles();
-      unsubCategories();
     };
   }, []);
-
-  useEffect(() => {
-    if (loadingArticles || loadingCategories) {
-      return;
-    }
-
-    const categoryMap = new Map<ArticleCategory["id"], ArticleCategory>();
-    categoriesData.forEach(category => {
-      categoryMap.set(category.id, category);
-    });
-
-    const _articles: FullArticle[] = articlesData.map(article => {
-      return {
-        ...article,
-        category: categoryMap.get(article.categoryId) || null,
-      };
-    });
-    setArticles(_articles);
-    setCategories(categoriesData);
-  }, [loadingArticles, loadingCategories, articlesData, categoriesData]);
 
   const getById = useCallback(
     (id: Article["id"]) => {
@@ -85,7 +51,27 @@ export const ArticlesProvider = ({ ...rest }) => {
     [articles]
   );
 
-  const loading = loadingArticles || loadingCategories;
+  const loading = loadingArticles;
+
+  const categories: string[] = useMemo(
+    () => [
+      "Basic Skills",
+      "Beginners",
+      "Career",
+      "CCM (Contemporary Commercial Music)",
+      "Crossing Over",
+      "Exercises",
+      "Online Lessons",
+      "Online Voice Lessons",
+      "Songs",
+      "Students",
+      "Tips",
+      "Vocal Coaches ",
+      "Voice Teachers",
+      "Warmups",
+    ],
+    []
+  );
 
   const value = useMemo(
     () => ({ articles, categories, loading, error, getById }),

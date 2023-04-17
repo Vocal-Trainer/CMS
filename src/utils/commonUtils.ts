@@ -1,13 +1,7 @@
 import firebase from "firebase/compat/app";
 import moment from "moment";
 import { DeepMap, FieldError } from "react-hook-form";
-import {
-  BannerDisplayableSegment,
-  NotificationTopics,
-  RemoteNotificationRecordType,
-  RoleTypes,
-  UserSegmantType,
-} from ".";
+import { RoleTypes } from ".";
 import { theme } from "../components/theme/util/theme";
 import { validationError } from "./consts";
 
@@ -30,109 +24,6 @@ export const getLanguages = () => {
   };
   const languages: languageType[] = [swedish, english];
   return languages;
-};
-
-export const getRemoteNotificationTopics = () => {
-  const topicOptions = [
-    {
-      key: NotificationTopics.Pregnancy,
-      value: NotificationTopics.Pregnancy,
-      display: NotificationTopics.Pregnancy,
-    },
-    {
-      key: NotificationTopics.Children,
-      value: NotificationTopics.Children,
-      display: NotificationTopics.Children,
-    },
-    {
-      key: NotificationTopics.Offer,
-      value: NotificationTopics.Offer,
-      display: NotificationTopics.Offer,
-    },
-    {
-      key: NotificationTopics.Partner,
-      value: NotificationTopics.Partner,
-      display: NotificationTopics.Partner,
-    },
-    {
-      key: NotificationTopics.Reminder,
-      value: NotificationTopics.Reminder,
-      display: NotificationTopics.Reminder,
-    },
-    {
-      key: NotificationTopics.Update,
-      value: NotificationTopics.Update,
-      display: NotificationTopics.Update,
-    },
-  ];
-  return topicOptions;
-};
-
-export const getUserSegments = () => {
-  const topicOptions = [
-    {
-      key: UserSegmantType.childrenInMonthsBetween,
-      value: UserSegmantType.childrenInMonthsBetween,
-      display: "Users with children in months between",
-    },
-    {
-      key: UserSegmantType.childrenInOddMonths,
-      value: UserSegmantType.childrenInOddMonths,
-      display: "Users with children in odd months",
-    },
-    {
-      key: UserSegmantType.childrenInEvenMonths,
-      value: UserSegmantType.childrenInEvenMonths,
-      display: "Users with children in even months",
-    },
-    {
-      key: UserSegmantType.pregnanciesInOrAboveWeekNumber,
-      value: UserSegmantType.pregnanciesInOrAboveWeekNumber,
-      display: "Users with pregnancies in weeks between",
-    },
-    {
-      key: UserSegmantType.usersWithPartners,
-      value: UserSegmantType.usersWithPartners,
-      display: "Has a partner",
-    },
-    {
-      key: UserSegmantType.usersWithSelectedTown,
-      value: UserSegmantType.usersWithSelectedTown,
-      display: "Has set their home town to ",
-    },
-    {
-      key: UserSegmantType.usersWithCategorySpecified,
-      value: UserSegmantType.usersWithCategorySpecified,
-      display: "Has specified interest",
-    },
-  ];
-  return topicOptions;
-};
-
-export const getMobileBannerSegments = () => {
-  const topicOptions = [
-    {
-      key: BannerDisplayableSegment.childrenWithInMonthsRange,
-      value: BannerDisplayableSegment.childrenWithInMonthsRange,
-      display: "Users with children in months between",
-    },
-    {
-      key: BannerDisplayableSegment.pregnanciesWithInWeeksRange,
-      value: BannerDisplayableSegment.pregnanciesWithInWeeksRange,
-      display: "Users with pregnancies in weeks between",
-    },
-    {
-      key: BannerDisplayableSegment.hasPartner,
-      value: BannerDisplayableSegment.hasPartner,
-      display: "Has a partner",
-    },
-    {
-      key: BannerDisplayableSegment.allUsers,
-      value: BannerDisplayableSegment.allUsers,
-      display: "All users",
-    },
-  ];
-  return topicOptions;
 };
 
 export const formatTimeStampToDateString = (timeStamp: any) => {

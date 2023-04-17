@@ -126,7 +126,7 @@ export const StyledMenu = styled(Menu)`
 export const StyledMenuCMS = styled(Menu)`
   height: 100%;
   border-right: 0;
-  background-color: ${props => props.theme.secondary};
+  background-color: ${props => props.theme.primary};
   padding-left: 0.5rem;
   padding-right: 0.5rem;
 `;
@@ -136,11 +136,11 @@ export const StyledMenuItem = styled(Item)`
   font-size: 1rem !important;
 
   &:hover {
-    background-color: ${props => props.theme.primary};
+    background-color: ${props => props.theme.secondary};
   }
 
   &::after {
-    border-right-color: ${props => props.theme.primary} !important;
+    border-right-color: ${props => props.theme.secondary} !important;
   }
 
   &.ant-menu-item-active,

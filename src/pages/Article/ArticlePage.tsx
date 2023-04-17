@@ -1,75 +1,49 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useForm, Controller } from "react-hook-form";
-import {
-  Row,
-  Col,
-  Typography,
-  Select,
-  Switch,
-  Divider,
-  List,
-  Collapse,
-} from "antd";
+import { Row, Col, Typography, Select, Divider, DatePicker } from "antd";
 import { Form } from "antd";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import {
-  isEqualArrays,
-  valueOrNull,
-  AspectRatio,
-  formValidationError,
-  ContentType,
-  DeepLinkType,
-} from "../../utils";
-import { FormEdit, FormEditType } from "./../../components/FormEdit";
+import { AspectRatio, formValidationError, valueOrNull } from "../../utils";
+import { FormEdit, FormEditType, MarkdownEditor } from "./../../components";
 import { useArticle, useArticles } from "../../context";
-// import { MarkdownEditor } from "../../components";
 import { ArticleService } from "../../services";
 import { commonErrors } from "../../language";
-import { DropAndCrop } from "../../components/DropAndCrop";
 import styled from "styled-components";
 import BJInput from "../../components/theme/atoms/BJInput";
-import BJButton, { ButtonTypes } from "../../components/theme/atoms/Button";
 import { ImagesCollapse } from "../../components/ImagesCollapse";
 
-const { Paragraph, Title } = Typography;
-const { Panel } = Collapse;
+const { Paragraph } = Typography;
 
 export type FormValues = {
-  categoryId: string;
-  verifierId: string;
-  sponsorId: string;
+  category: string;
   title: string;
-  audioUrl: string | null;
   imageUrl: string | null;
   stretchedImageUrl: string | null;
   squareImageUrl: string | null;
-  videoUrl: string | null;
-  offerId1: string | null;
-  offerId2: string | null;
-  bannerImage1Url: string | null;
-  bannerImage2Url: string | null;
-  promoted: boolean;
+  content: string;
+  shortDescription: string;
+  source: string;
+  author: string;
+  publishedDate: string;
 };
 
 const { urlValidationError: urlError, requiredError } = commonErrors;
 
 const schema = yup.object().shape({
   title: yup.string().required(requiredError),
-  audioUrl: yup.string().nullable().url(urlError),
   imageUrl: yup.string().nullable().url(urlError),
   stretchedImageUrl: yup.string().nullable().url(urlError),
   squareImageUrl: yup.string().nullable().url(urlError),
-  videoUrl: yup.string().nullable().url(urlError),
-  bannerImage1Url: yup.string().nullable().url(urlError),
-  bannerImage2Url: yup.string().nullable().url(urlError),
-  categoryId: yup.string().required(requiredError),
+  category: yup.string().required(requiredError),
+  content: yup.string().required(requiredError),
+  shortDescription: yup.string().required(requiredError),
 });
 
 export const ArticlePage = () => {
   const navigate = useNavigate();
-  const { articles, categories } = useArticles();
+  const { categories } = useArticles();
   const { id } = useParams<string>();
   const { article, loading } = useArticle(id);
 
@@ -83,69 +57,42 @@ export const ArticlePage = () => {
     watch,
   } = useForm<FormValues>({
     resolver: yupResolver(schema),
-    defaultValues: { promoted: false },
   });
-
-  const [intro, setIntro] = useState("");
-  const [body, setBody] = useState("");
-  const [tagWords, setTagWords] = useState<string[]>([]);
-  const [tags, setTags] = useState<string[]>([]);
-
-  const [changeFeaturedListOrder, setchangeFeaturedListOrder] = useState(false);
 
   useEffect(() => {
     if (loading || article === null) {
       return;
     }
     reset({ ...article });
-    setIntro(article.intro);
-    setBody(article.body);
   }, [article, loading, reset]);
 
   const onSubmit = async (data: FormValues) => {
-    const category = categories.find(x => x.id === data.categoryId);
-    const updatedArticle = {
-      categoryId: data.categoryId,
+    const updatedArticle: Partial<Article> = {
+      category: data.category,
       title: data.title.trim(),
-      intro,
-      body,
-      verifierId: valueOrNull(data.verifierId),
-      sponsorId: valueOrNull(data.sponsorId),
-      offerId1: valueOrNull(data.offerId1),
-      offerId2: valueOrNull(data.offerId2),
+      shortDescription: data.shortDescription,
+      content: data.content,
       imageUrl: valueOrNull(data.imageUrl),
-      stretchedImageUrl: valueOrNull(data.stretchedImageUrl),
       squareImageUrl: valueOrNull(data.squareImageUrl),
-      audioUrl: valueOrNull(data.audioUrl),
-      videoUrl: valueOrNull(data.videoUrl),
-      bannerImage1Url: valueOrNull(data.bannerImage1Url),
-      bannerImage2Url: valueOrNull(data.bannerImage2Url),
-      tagWords: tagWords,
+      source: valueOrNull(data.source),
+      author: valueOrNull(data.author),
+      publishedDate: valueOrNull(data.publishedDate),
     };
 
     if (article) {
-      // await ArticleService.update(id, updatedArticle);
+      await ArticleService.update(id, updatedArticle);
     } else {
-      // const { id } = await ArticleService.create(updatedArticle);
-      // return navigate(`../${id}`);
+      const { id } = await ArticleService.create(updatedArticle);
+      return navigate(`../${id}`);
     }
   };
 
   const handleUploadedImageUrl = (url: string | null) => {
     setValue("imageUrl", url, { shouldDirty: true });
   };
-  const handleUploadedStretchedImageUrl = (url: string | null) => {
-    setValue("stretchedImageUrl", url, { shouldDirty: true });
-  };
+
   const handleUploadedSquareImageUrl = (url: string | null) => {
     setValue("squareImageUrl", url, { shouldDirty: true });
-  };
-  const handleBannerImageUrl = (url: string | null) => {
-    setValue("bannerImage1Url", url, { shouldDirty: true });
-  };
-
-  const handleBannerImageUrl2 = (url: string | null) => {
-    setValue("bannerImage2Url", url, { shouldDirty: true });
   };
 
   const onRemove = async () => {
@@ -157,10 +104,7 @@ export const ArticlePage = () => {
     }
   };
 
-  const isDirty =
-    !!Object.keys(formState.dirtyFields).length ||
-    article?.intro !== intro ||
-    article?.body !== body;
+  const isDirty = !!Object.keys(formState.dirtyFields).length;
   const articleTitle = watch("title");
 
   return (
@@ -205,15 +149,6 @@ export const ArticlePage = () => {
                 defaultCropBoxWidth: 300,
                 extra: "Best resolution for this would be 1280*960",
               },
-              "Stretched image 2:1": {
-                title: "Stretched image 2:1",
-                setUploadUrl: handleUploadedStretchedImageUrl,
-                uploadImage: ArticleService.uploadArticleImage,
-                initialUrl: article?.stretchedImageUrl,
-                lockedRatio: AspectRatio.TwoToOne,
-                defaultCropBoxWidth: 300,
-                extra: "Best resolution for this would be 1024*512",
-              },
               "Square image 1:1": {
                 title: "Square image 1:1",
                 setUploadUrl: handleUploadedSquareImageUrl,
@@ -225,14 +160,25 @@ export const ArticlePage = () => {
               },
             }}
           />
+
           <ItemWrapper>
-            <Paragraph>Intro</Paragraph>
-            {/* <MarkdownEditor name="intro" narrow initialValue={article?.intro ?? ""} onChange={setIntro} /> */}
+            <Paragraph>Short Description</Paragraph>
+            <MarkdownEditor
+              name="body"
+              initialValue={article?.shortDescription ?? ""}
+              onChange={v =>
+                setValue("shortDescription", v, { shouldDirty: true })
+              }
+            />
           </ItemWrapper>
 
           <ItemWrapper>
             <Paragraph>Body</Paragraph>
-            {/* <MarkdownEditor name="body" initialValue={article?.body ?? ""} onChange={setBody} /> */}
+            <MarkdownEditor
+              name="body"
+              initialValue={article?.content ?? ""}
+              onChange={v => setValue("content", v, { shouldDirty: true })}
+            />
           </ItemWrapper>
 
           <Divider />
@@ -240,71 +186,57 @@ export const ArticlePage = () => {
         <Col span={12}>
           <Form.Item
             label="Category"
-            name="categoryId"
+            name="category"
             required
-            validateStatus={errors.categoryId && "error"}
+            validateStatus={errors.category && "error"}
             help={
               <Typography.Paragraph type="danger">
-                {errors.categoryId?.message}
+                {errors.category?.message}
               </Typography.Paragraph>
             }
           >
             <Controller
               control={control}
-              name="categoryId"
+              name="category"
               render={({ field: { onChange, value } }) => (
                 <Select onChange={onChange} value={value} size="large">
                   <Select.Option value="">-</Select.Option>
                   {categories.map(category => (
-                    <Select.Option value={category.id} key={category.id}>
-                      {category.translations.sv.title}
+                    <Select.Option value={category} key={category}>
+                      {category}
                     </Select.Option>
                   ))}
                 </Select>
               )}
             />
           </Form.Item>
-          <Form.Item label="Promote" key="promoted">
+          <Form.Item
+            label="Source URL"
+            validateStatus={errors.source && "error"}
+            extra={
+              <Typography.Paragraph type="danger">
+                {errors.source?.message}
+              </Typography.Paragraph>
+            }
+          >
             <Controller
               control={control}
-              name="promoted"
-              render={({ field: { onChange, value } }) => (
-                <Switch onChange={onChange} checked={value} />
+              name="source"
+              render={({ field }) => <BJInput {...field} />}
+            />
+          </Form.Item>
+          <Form.Item label="Publish date">
+            <Controller
+              name="publishedDate"
+              control={control}
+              render={({ field: { onChange } }) => (
+                <DatePicker
+                  placeholder={article?.publishedDate ?? "Select date"}
+                  format={"YYYY-MM-DD"}
+                  onChange={onChange}
+                  size={"large"}
+                />
               )}
-            />
-          </Form.Item>
-
-          <Form.Item
-            label="Audio URL"
-            validateStatus={errors.audioUrl && "error"}
-            extra={
-              <Typography.Paragraph type="danger">
-                {errors.audioUrl?.message}
-              </Typography.Paragraph>
-            }
-          >
-            <Controller
-              control={control}
-              name="audioUrl"
-              render={({ field }) => <BJInput {...field} />}
-            />
-          </Form.Item>
-          <>
-            <Paragraph>Upload video</Paragraph>
-          </>
-          <Form.Item
-            label="Video URL"
-            validateStatus={errors.videoUrl && "error"}
-            extra={
-              <Typography.Paragraph type="danger">
-                {errors.videoUrl?.message}
-              </Typography.Paragraph>
-            }
-          >
-            <Controller
-              control={control}
-              name="videoUrl"
-              render={({ field }) => <BJInput {...field} />}
             />
           </Form.Item>
         </Col>
@@ -315,8 +247,4 @@ export const ArticlePage = () => {
 
 const ItemWrapper = styled.div`
   padding-top: 2rem;
-`;
-
-const StyledSelect = styled(Select)`
-  width: 12rem;
 `;

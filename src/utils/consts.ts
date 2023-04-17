@@ -47,69 +47,8 @@ export const firebaseBucketConsts = {
 };
 
 export const firebaseCollectionNames = {
-  admins: "admins",
-  articleCategories: "articleCategories",
   articles: "articles",
-  birthStories: "birthStories",
-  blogposts: "blogposts",
-  categories: "categories",
-  checklistTemplates: "checklistTemplates",
-  checklists: "checklists",
-  childBlogPosts: "childBlogPosts",
-  childInformation: "childInformation",
-  contentMenu: "contentMenu",
-  tipsCollection: {
-    tips: "tips",
-    pregnancyTipsSub: "pregnancyTips",
-    childTipsSub: "childTips",
-  },
-  content: {
-    content: "content",
-    editorContent: "editorContent",
-    pregnancyTipsSub: "pregnancyTips",
-  },
-  dietaryAdviceCategories: "dietaryAdviceCategories",
-  dietaryAdviceContent: "dietaryAdviceContent",
-  dietaryAdvices: "dietaryAdvices",
-  faq: "faq",
-  faqCategories: "faqCategories",
-  forceUpdate: "forceUpdate",
-  influencers: "influencers",
-  milestones: "milestones",
-  monthlyInformation: "monthlyInformation",
-  offerSignups: "offerSignups",
-  offers: "offers",
-  podcasts: "podcasts",
-  popular: "popular",
-  popularArticles: "popularArticles",
-  search: "search",
-  shareCodes: "shareCodes",
-  Sponsors: "Sponsors",
-  support: "support",
-  users: "users",
-  verifiers: "verifiers",
-  weeklyInformation: "weeklyInformation",
-  highlights: "highlights",
-  generalBlogPosts: "generalBlogPosts",
-  categoryItems: {
-    categoryItems: "categoryItems",
-    faq: "faq",
-    content: "content",
-  },
-  notifications: {
-    collectionName: "notifications",
-    content: {
-      pregnancy: "pregnancy",
-      children: "children",
-    },
-  },
-  remoteNotifications: {
-    collectionName: "remoteNotifications",
-  },
-  tagsCollection: {
-    tags: "tags",
-    commonSub: "common",
-  },
+  admins: "admins",
 };
 
 export const NUM_OF_WEEKS = 42;

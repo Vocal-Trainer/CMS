@@ -1,4 +1,3 @@
-import { ReactComponent as LOGO } from "../../assets/logo-purpledark.svg";
 import { Useremail, Password } from "../../assets/icons/icons";
 import { useAuth } from "../../context";
 import { Form, Row, Typography } from "antd";
@@ -48,80 +47,75 @@ export const LoginPage = () => {
 
   return (
     <MainContainer>
-      <StyledLoginContainer>
-        <LogoWrapper>
-          <LOGO />
-        </LogoWrapper>
-        <FormContainer>
-          <FormItemWrapper width={windowSize.width}>
-            <div style={{ position: "relative" }}>
-              <h1>Log in</h1>
-            </div>
+      <FormContainer>
+        <FormItemWrapper width={windowSize.width}>
+          <div style={{ position: "relative" }}>
+            <h1>Log in</h1>
+          </div>
 
-            <Form name="basic" onFinish={handleSubmit(onSubmit)}>
-              <StyledFormItem
+          <Form name="basic" onFinish={handleSubmit(onSubmit)}>
+            <StyledFormItem
+              name="email"
+              required
+              help={
+                <Typography.Paragraph type="danger">
+                  {errors.email?.message}
+                </Typography.Paragraph>
+              }
+            >
+              <Controller
+                control={control}
                 name="email"
-                required
-                help={
-                  <Typography.Paragraph type="danger">
-                    {errors.email?.message}
-                  </Typography.Paragraph>
-                }
-              >
-                <Controller
-                  control={control}
-                  name="email"
-                  render={({ field }) => (
-                    <BJInput
-                      prefix={<Useremail />}
-                      type="email"
-                      placeholder="Email"
-                      {...field}
-                    />
-                  )}
-                />
-              </StyledFormItem>
-              <StyledFormItem
+                render={({ field }) => (
+                  <BJInput
+                    prefix={<Useremail />}
+                    type="email"
+                    placeholder="Email"
+                    {...field}
+                  />
+                )}
+              />
+            </StyledFormItem>
+            <StyledFormItem
+              name="password"
+              required
+              help={
+                <Typography.Paragraph type="danger">
+                  {errors.password?.message}
+                </Typography.Paragraph>
+              }
+            >
+              <Controller
+                control={control}
                 name="password"
-                required
-                help={
-                  <Typography.Paragraph type="danger">
-                    {errors.password?.message}
-                  </Typography.Paragraph>
-                }
-              >
-                <Controller
-                  control={control}
-                  name="password"
-                  render={({ field }) => (
-                    <BJInput
-                      prefix={<Password />}
-                      placeholder="Password"
-                      type="password"
-                      {...field}
-                    />
-                  )}
-                />
+                render={({ field }) => (
+                  <BJInput
+                    prefix={<Password />}
+                    placeholder="Password"
+                    type="password"
+                    {...field}
+                  />
+                )}
+              />
+            </StyledFormItem>
+            {error && <Text type="danger">{error}</Text>}
+            <StyledRow justify="end">
+              <StyledFormItem>
+                <BJButton
+                  buttonType={ButtonTypes.Add}
+                  rounded
+                  size="large"
+                  htmlType="submit"
+                  disabled={signingIn}
+                  loading={signingIn}
+                >
+                  Login
+                </BJButton>
               </StyledFormItem>
-              {error && <Text type="danger">{error}</Text>}
-              <StyledRow justify="end">
-                <StyledFormItem>
-                  <BJButton
-                    buttonType={ButtonTypes.Add}
-                    rounded
-                    size="large"
-                    htmlType="submit"
-                    disabled={signingIn}
-                    loading={signingIn}
-                  >
-                    Login
-                  </BJButton>
-                </StyledFormItem>
-              </StyledRow>
-            </Form>
-          </FormItemWrapper>
-        </FormContainer>
-      </StyledLoginContainer>
+            </StyledRow>
+          </Form>
+        </FormItemWrapper>
+      </FormContainer>
     </MainContainer>
   );
 };

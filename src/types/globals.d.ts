@@ -11,49 +11,15 @@ interface Admin {
 
 interface Article {
   id: string;
-  categoryId: string;
-  intro: string;
   title: string;
-  body: string;
+  content: string;
+  shortDescription: string;
+  author: string;
+  source: string;
+  category: string;
   imageUrl: string;
-  stretchedImageUrl: string;
   squareImageUrl: string;
-  bannerImage1Url: string | null;
-  bannerImage2Url: string | null;
-  videoUrl: string | null;
-  audioUrl: string | null;
-  sortOrder: number | null;
-}
-
-interface FullArticle extends Article {
-  category: ArticleCategory | null;
-}
-
-type articleCategoryTemplateTypes =
-  | "Health"
-  | "Birth"
-  | "Exercise"
-  | "Baby"
-  | "BreastFeeding"
-  | "Pregnancy";
-
-interface ArticleCategory {
-  id?: string;
-  sortOrder: number;
-  template: articleCategoryTemplateTypes;
-  show: boolean;
-  icon: string;
-  translations: {
-    sv: {
-      title: string;
-      description: string;
-    };
-    en: {
-      title: string;
-      description: string;
-    };
-  };
-  restricted: boolean;
+  publishedDate: string;
 }
 
 interface MenuItemInfo {
