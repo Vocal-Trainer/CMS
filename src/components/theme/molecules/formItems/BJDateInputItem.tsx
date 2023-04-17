@@ -1,4 +1,4 @@
-import { Form, FormItemProps, Input, InputProps, Typography } from "antd";
+import { DatePicker, Form, FormItemProps, InputProps, Typography } from "antd";
 import { SizeType } from "antd/lib/config-provider/SizeContext";
 import {
   Control,
@@ -9,25 +9,18 @@ import {
 import BJCopy from "../../atoms/BJCopy";
 import { BJFormLabelInfo } from "../../atoms/BJInfo";
 
-export const BJInputFormItem = <T,>({
+export const BJDateInputItem = <T,>({
   error,
   message,
   label,
   required,
   control,
   fieldName,
-  autoFocus,
-  disabled,
   extra,
   placeHolder,
-  type,
-  size,
-  autoComplete,
-  suffix,
-  maxLength,
-  rows,
   showInfo,
   allowCopy = false,
+  format = "YYYY-MM-DD",
 }: {
   error?: boolean;
   message?: string;
@@ -44,7 +37,7 @@ export const BJInputFormItem = <T,>({
   showInfo?: boolean;
   autoComplete?: string;
   allowCopy?: boolean;
-  rows?: number;
+  format?: string;
 } & FormItemProps<T> &
   InputProps) => {
   return (
@@ -76,31 +69,12 @@ export const BJInputFormItem = <T,>({
         name={fieldName}
         render={({ field }: { field: ControllerRenderProps<T, Path<T>> }) => (
           <span style={{ display: "flex", alignItems: "center" }}>
-            {rows ? (
-              <Input.TextArea
-                {...field}
-                rows={rows}
-                autoFocus={autoFocus}
-                autoComplete={autoComplete}
-                disabled={disabled}
-                placeholder={!!placeHolder && placeHolder}
-                size={size ? size : "large"}
-                value={field.value as string | number | readonly string[]}
-                maxLength={maxLength}
-              />
-            ) : (
-              <Input
-                {...field}
-                autoFocus={autoFocus}
-                disabled={disabled}
-                placeholder={!!placeHolder && placeHolder}
-                size={size ? size : "large"}
-                value={field.value as string | number | readonly string[]}
-                type={type === "password" ? "password" : "text"}
-                suffix={suffix}
-                maxLength={maxLength}
-              />
-            )}
+            <DatePicker
+              {...field}
+              placeholder={placeHolder}
+              format={format}
+              size={"large"}
+            />
             {allowCopy && <BJCopy textToCopy={field.value as string} />}
           </span>
         )}

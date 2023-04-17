@@ -17,6 +17,7 @@ export * from "./molecules/TableHeader";
 export * from "./molecules/formItems/BJFormInput";
 export * from "./molecules/formItems/BJFormSelectItem";
 export * from "./molecules/formItems/BJSwitchFormItem";
+export * from "./molecules/formItems/BJDateInputItem";
 export * from "./util/notificationObj";
 export * from "./util/theme";
 export * from "./util/sorter";

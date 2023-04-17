@@ -1,20 +1,21 @@
 import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { useForm, Controller } from "react-hook-form";
-import { Row, Col, Typography, Select, Divider, DatePicker } from "antd";
-import { Form } from "antd";
+import { useForm } from "react-hook-form";
+import { Row, Col, Divider } from "antd";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { AspectRatio, formValidationError, valueOrNull } from "../../utils";
-import { FormEdit, FormEditType, MarkdownEditor } from "./../../components";
+import { FormEdit, FormEditType } from "./../../components";
 import { useArticle, useArticles } from "../../context";
 import { ArticleService } from "../../services";
 import { commonErrors } from "../../language";
-import styled from "styled-components";
-import BJInput from "../../components/theme/atoms/BJInput";
 import { ImagesCollapse } from "../../components/ImagesCollapse";
-
-const { Paragraph } = Typography;
+import { BJMdFormItem } from "../../components/theme/molecules/formItems/BJFormMarkdown";
+import {
+  BJDateInputItem,
+  BJInputFormItem,
+  BJSelectFormItem,
+} from "../../components/theme";
 
 export type FormValues = {
   category: string;
@@ -121,22 +122,15 @@ export const ArticlePage = () => {
     >
       <Row gutter={20}>
         <Col span={12}>
-          <Form.Item
-            label="Title"
-            validateStatus={errors.title && "error"}
-            extra={
-              <Typography.Paragraph type="danger">
-                {errors.title?.message}
-              </Typography.Paragraph>
-            }
-            required
-          >
-            <Controller
-              control={control}
-              name="title"
-              render={({ field }) => <BJInput {...field} />}
-            />
-          </Form.Item>
+          <BJInputFormItem
+            control={control}
+            error={!!errors?.title}
+            label={"Title"}
+            message={errors.title?.message}
+            required={true}
+            autoFocus
+            fieldName={"title"}
+          />
           <ImagesCollapse
             title="Image URL"
             config={{
@@ -160,91 +154,66 @@ export const ArticlePage = () => {
               },
             }}
           />
-
-          <ItemWrapper>
-            <Paragraph>Short Description</Paragraph>
-            <MarkdownEditor
-              name="body"
-              initialValue={article?.shortDescription ?? ""}
-              onChange={v =>
-                setValue("shortDescription", v, { shouldDirty: true })
-              }
-            />
-          </ItemWrapper>
-
-          <ItemWrapper>
-            <Paragraph>Body</Paragraph>
-            <MarkdownEditor
-              name="body"
-              initialValue={article?.content ?? ""}
-              onChange={v => setValue("content", v, { shouldDirty: true })}
-            />
-          </ItemWrapper>
-
-          <Divider />
         </Col>
+
         <Col span={12}>
-          <Form.Item
-            label="Category"
-            name="category"
-            required
-            validateStatus={errors.category && "error"}
-            help={
-              <Typography.Paragraph type="danger">
-                {errors.category?.message}
-              </Typography.Paragraph>
-            }
-          >
-            <Controller
-              control={control}
-              name="category"
-              render={({ field: { onChange, value } }) => (
-                <Select onChange={onChange} value={value} size="large">
-                  <Select.Option value="">-</Select.Option>
-                  {categories.map(category => (
-                    <Select.Option value={category} key={category}>
-                      {category}
-                    </Select.Option>
-                  ))}
-                </Select>
-              )}
-            />
-          </Form.Item>
-          <Form.Item
-            label="Source URL"
-            validateStatus={errors.source && "error"}
-            extra={
-              <Typography.Paragraph type="danger">
-                {errors.source?.message}
-              </Typography.Paragraph>
-            }
-          >
-            <Controller
-              control={control}
-              name="source"
-              render={({ field }) => <BJInput {...field} />}
-            />
-          </Form.Item>
-          <Form.Item label="Publish date">
-            <Controller
-              name="publishedDate"
-              control={control}
-              render={({ field: { onChange } }) => (
-                <DatePicker
-                  placeholder={article?.publishedDate ?? "Select date"}
-                  format={"YYYY-MM-DD"}
-                  onChange={onChange}
-                  size={"large"}
-                />
-              )}
-            />
-          </Form.Item>
+          <BJSelectFormItem
+            size="large"
+            control={control}
+            required={true}
+            error={!!errors.category}
+            label={"Category"}
+            message={errors.category?.message}
+            optionsList={categories.map(_c => ({
+              key: _c,
+              value: _c,
+              display: _c,
+            }))}
+            fieldName={"category"}
+          />
+          <BJInputFormItem
+            control={control}
+            error={!!errors.source}
+            label={"source"}
+            message={errors.source?.message}
+            fieldName={"source"}
+            required={false}
+          />
+
+          <BJDateInputItem
+            control={control}
+            error={!!errors.publishedDate}
+            label={"Publish date"}
+            message={errors.publishedDate?.message}
+            fieldName={"publishedDate"}
+            required={false}
+          />
         </Col>
       </Row>
+
+      <Divider />
+      <BJMdFormItem
+        disabled={false}
+        setValue={setValue}
+        control={control}
+        error={!!errors.shortDescription}
+        label={"Short Description"}
+        message={errors.shortDescription?.message}
+        required={true}
+        fieldName={"shortDescription"}
+      />
+
+      <Divider />
+      <BJMdFormItem
+        disabled={false}
+        setValue={setValue}
+        control={control}
+        error={!!errors.content}
+        label={"Content"}
+        message={errors.content?.message}
+        required={true}
+        fieldName={"content"}
+      />
     </FormEdit>
   );
 };
-
-const ItemWrapper = styled.div`
-  padding-top: 2rem;
-`;
