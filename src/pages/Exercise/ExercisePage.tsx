@@ -5,9 +5,9 @@ import { Row, Col, Divider } from "antd";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { AspectRatio, formValidationError, valueOrNull } from "../../utils";
-import { FormEdit, FormEditType } from "./../../components";
-import { useKaraoke, useKaraokes } from "../../context";
-import { KaraokeService } from "../../services";
+import { FormEdit, FormEditType } from "../../components";
+import { useExercise } from "../../context";
+import { ExerciseService, KaraokeService } from "../../services";
 import { commonErrors } from "../../language";
 import { ImagesCollapse } from "../../components/ImagesCollapse";
 import {
@@ -15,16 +15,17 @@ import {
   BJInputFormItem,
   BJSelectFormItem,
 } from "../../components/theme";
+import { BJMdFormItem } from "../../components/theme/molecules/formItems/BJFormMarkdown";
 
 type FormValues = {
-  category: string;
   title: string;
+  subTitle: string;
+  content: string;
+  length: string;
+  day: string;
   imageUrl: string | null;
-  source: string;
-  author: string;
+  exerciseUrl: string;
   publishedDate: string;
-  difficulty: string;
-  lyrics: string;
 };
 
 const { urlValidationError: urlError, requiredError } = commonErrors;
@@ -32,18 +33,12 @@ const { urlValidationError: urlError, requiredError } = commonErrors;
 const schema = yup.object().shape({
   title: yup.string().required(requiredError),
   imageUrl: yup.string().nullable().url(urlError),
-  category: yup.string().required(requiredError),
-  difficulty: yup.string().required(requiredError),
-  lyrics: yup.string().required(requiredError),
-  author: yup.string().required(requiredError),
-  publishedDate: yup.string().required(requiredError),
 });
 
-export const KaraokePage = () => {
+export const ExercisePage = () => {
   const navigate = useNavigate();
-  const { categories, difficulty } = useKaraokes();
   const { id } = useParams<string>();
-  const { karaoke, loading } = useKaraoke(id);
+  const { exercise, loading } = useExercise(id);
 
   const {
     formState,
@@ -58,28 +53,28 @@ export const KaraokePage = () => {
   });
 
   useEffect(() => {
-    if (loading || karaoke === null) {
+    if (loading || exercise === null) {
       return;
     }
-    reset({ ...karaoke });
-  }, [karaoke, loading, reset]);
+    reset({ ...exercise });
+  }, [exercise, loading, reset]);
 
   const onSubmit = async (data: FormValues) => {
-    const updated: Partial<Karaoke> = {
-      category: data.category,
-      title: data.title.trim(),
-      difficulty: data.difficulty,
-      author: valueOrNull(data.author),
-      source: valueOrNull(data.source),
+    const updated: Partial<Exercise> = {
+      title: valueOrNull(data.title),
+      subTitle: valueOrNull(data.subTitle),
+      content: valueOrNull(data.content),
+      length: valueOrNull(data.length),
+      day: valueOrNull(data.day),
       imageUrl: valueOrNull(data.imageUrl),
-      publishedDate: valueOrNull(data.publishedDate),
-      lyrics: valueOrNull(data.lyrics),
+      exerciseUrl: valueOrNull(data.exerciseUrl),
+      publishDate: new Date().toISOString(),
     };
 
-    if (karaoke) {
-      await KaraokeService.update(id, updated);
+    if (exercise) {
+      await ExerciseService.update(id, updated);
     } else {
-      const { id } = await KaraokeService.create(updated);
+      const { id } = await ExerciseService.create(updated);
       return navigate(`../${id}`);
     }
   };
@@ -89,8 +84,8 @@ export const KaraokePage = () => {
   };
 
   const onRemove = async () => {
-    if (karaoke) {
-      await KaraokeService.delete(karaoke.id);
+    if (exercise) {
+      await KaraokeService.delete(id);
       navigate("./..", { replace: true });
     } else {
       throw new Error("Karaoke not found");
@@ -105,9 +100,9 @@ export const KaraokePage = () => {
       onRemove={onRemove}
       hasValidationErrors={Object.keys(errors).length !== 0}
       enableSave={isDirty}
-      title={karaoke ? karaoke?.title : "New Karaoke"}
-      id={karaoke?.id}
-      editType={karaoke?.id ? FormEditType.EDIT : FormEditType.ADD}
+      title={exercise ? exercise?.title : "New Exercise"}
+      id={exercise?.id}
+      editType={exercise?.id ? FormEditType.EDIT : FormEditType.ADD}
       loading={loading}
       onSubmit={handleSubmit(onSubmit, formValidationError)}
       recordIdentifier={articleTitle}
@@ -123,15 +118,24 @@ export const KaraokePage = () => {
             autoFocus
             fieldName={"title"}
           />
+          <BJInputFormItem
+            control={control}
+            error={!!errors?.subTitle}
+            label={"Sub Title"}
+            message={errors.subTitle?.message}
+            required={true}
+            autoFocus
+            fieldName={"subTitle"}
+          />
 
           <ImagesCollapse
             title="Image URL"
             config={{
-              "Cover image 1:1": {
-                title: "Square image 1:1",
+              "Cover image 4:2": {
+                title: "Square image 4:2",
                 setUploadUrl: handleUploadedImageUrl,
-                uploadImage: KaraokeService.uploadKaraokeImage,
-                initialUrl: karaoke?.imageUrl,
+                uploadImage: ExerciseService.uploadExerciseImage,
+                initialUrl: exercise?.imageUrl,
                 lockedRatio: AspectRatio.OneToOne,
                 defaultCropBoxWidth: 300,
                 extra: "Best resolution for this would be 600*600",
@@ -140,16 +144,6 @@ export const KaraokePage = () => {
           />
 
           <Divider />
-          <BJInputFormItem
-            control={control}
-            error={!!errors?.lyrics}
-            label={"Lyrics"}
-            message={errors.lyrics?.message}
-            required={true}
-            autoFocus
-            fieldName={"lyrics"}
-            rows={20}
-          />
         </Col>
 
         <Col span={12}>
@@ -157,53 +151,40 @@ export const KaraokePage = () => {
             size="large"
             control={control}
             required={true}
-            error={!!errors.category}
-            label={"Category"}
-            message={errors.category?.message}
-            optionsList={categories.map(_c => ({
-              key: _c,
-              value: _c,
-              display: _c,
-            }))}
-            fieldName={"category"}
+            error={!!errors.day}
+            label={"Day"}
+            message={errors.day?.message}
+            optionsList={Array(360)
+              .fill("")
+              .map((_, index) => ({
+                key: `${index}`,
+                value: `${index}`,
+                display: `${index}`,
+              }))}
+            fieldName={"day"}
           />
 
-          <BJSelectFormItem
-            size="large"
+          <BJInputFormItem
             control={control}
+            error={!!errors.length}
+            label={"Length"}
+            message={errors.length?.message}
+            fieldName={"length"}
             required={true}
-            error={!!errors.difficulty}
-            label={"Difficulty"}
-            message={errors.difficulty?.message}
-            optionsList={difficulty.map(_c => ({
-              key: _c,
-              value: _c,
-              display: _c,
-            }))}
-            fieldName={"difficulty"}
           />
 
           <BJInputFormItem
             control={control}
-            error={!!errors.author}
-            label={"Author"}
-            message={errors.author?.message}
-            fieldName={"author"}
-            required={false}
-          />
-
-          <BJInputFormItem
-            control={control}
-            error={!!errors.source}
-            label={"Source"}
-            message={errors.source?.message}
-            fieldName={"source"}
-            required={false}
+            error={!!errors.exerciseUrl}
+            label={"Exercise Url"}
+            message={errors.exerciseUrl?.message}
+            fieldName={"exerciseUrl"}
+            required={true}
           />
 
           <BJDateInputItem
             control={control}
-            error={!!errors.publishedDate}
+            error={!!errors.day}
             label={"Publish date"}
             message={errors.publishedDate?.message}
             fieldName={"publishedDate"}
@@ -211,6 +192,17 @@ export const KaraokePage = () => {
           />
         </Col>
       </Row>
+      <Divider />
+      <BJMdFormItem
+        disabled={false}
+        setValue={setValue}
+        control={control}
+        error={!!errors.content}
+        label={"Content"}
+        message={errors.content?.message}
+        required={true}
+        fieldName={"content"}
+      />
     </FormEdit>
   );
 };

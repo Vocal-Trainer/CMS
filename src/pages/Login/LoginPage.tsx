@@ -2,7 +2,6 @@ import { Useremail, Password } from "../../assets/icons/icons";
 import { useAuth } from "../../context";
 import { Form, Row, Typography } from "antd";
 import BJButton, { ButtonTypes } from "../../components/theme/atoms/Button";
-import LoginBackground from "../../assets/login-bg.png";
 import styled from "styled-components";
 import { Controller, useForm } from "react-hook-form";
 import Text from "antd/lib/typography/Text";
@@ -119,16 +118,6 @@ export const LoginPage = () => {
     </MainContainer>
   );
 };
-
-const StyledLoginContainer = styled.div`
-  height: 100%;
-  background-image: url(${LoginBackground});
-  width: 100%;
-  background-size: cover;
-  background-size: 100% 85vh;
-  background-repeat: no-repeat;
-  overflow: hidden;
-`;
 
 interface FormItemWrapperProps {
   width: number;

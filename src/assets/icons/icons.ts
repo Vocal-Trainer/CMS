@@ -1,14 +1,3 @@
-export { ReactComponent as Dashboard } from "./dashboard.svg";
 export { ReactComponent as Article } from "./article.svg";
-export { ReactComponent as Blogpost } from "./blogpost.svg";
-export { ReactComponent as BlogCategories } from "./blogcategories.svg";
-export { ReactComponent as Influencer } from "./influencer.svg";
-export { ReactComponent as Child } from "./child.svg";
-export { ReactComponent as Offers } from "./offers.svg";
-export { ReactComponent as Dietary } from "./dietary.svg";
-export { ReactComponent as Milestones } from "./milestones.svg";
-export { ReactComponent as Popular } from "./popular.svg";
-export { ReactComponent as FAQ } from "./faq.svg";
-export { ReactComponent as MonthlyInfo } from "./monthlyinfo.svg";
 export { ReactComponent as Useremail } from "./useremail.svg";
 export { ReactComponent as Password } from "./password.svg";

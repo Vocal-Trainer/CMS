@@ -5,4 +5,5 @@ export const cms = "/cms";
 
 export const articles = "articles";
 export const karaokes = "karaokes";
+export const exercises = "exercises";
 export const articleNew = "new";

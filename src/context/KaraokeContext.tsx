@@ -55,26 +55,22 @@ export const KaraokesProvider = ({ ...rest }) => {
 
   const categories: string[] = useMemo(
     () => [
-      "Basic Skills",
-      "Beginners",
-      "Career",
-      "CCM (Contemporary Commercial Music)",
-      "Crossing Over",
-      "Exercises",
-      "Online Lessons",
-      "Online Voice Lessons",
-      "Songs",
-      "Students",
-      "Tips",
-      "Vocal Coaches ",
-      "Voice Teachers",
-      "Warmups",
+      "Hip hop",
+      "Rock",
+      "Rhythm and blues",
+      "Soul music",
+      "Reggae",
+      "Country",
+      "Funk",
+      "Jazz",
+      "Blues",
+      "Vocal",
     ],
     []
   );
 
   const difficulty: string[] = useMemo(
-    () => ["Basic Skills", "Beginners", "Career"],
+    () => ["Easy", "Intermediate", "Hard"],
     []
   );
 
