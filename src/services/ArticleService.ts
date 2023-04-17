@@ -1,20 +1,24 @@
 import firebase from "../firebase";
 import { uploadImage } from "./serviceUtils";
+import { firebaseCollectionNames } from "../utils";
+const { articles } = firebaseCollectionNames;
 
-const articleFileStoragePath = "articles";
-
-const toArticle = (doc: any): Article => {
+const toArticle = (
+  doc: firebase.firestore.QueryDocumentSnapshot<firebase.firestore.DocumentData>
+): Article => {
   const data = doc.data();
 
   return {
     id: doc.id,
-    ...data,
+    title: data.title,
+    shortDescription: data.shortDescription,
+    content: data.content,
     imageUrl: data.imageUrl || null,
-    stretchedImageUrl: data.stretchedImageUrl || null,
     squareImageUrl: data.squareImageUrl || null,
-    videoUrl: data.videoUrl || null,
-    audioUrl: data.audioUrl || null,
-    sortOrder: data.sortOrder,
+    author: data.author,
+    source: data.source,
+    category: data.category,
+    publishedDate: data.publishedDate,
   };
 };
 
@@ -23,7 +27,7 @@ const subscribe = (
 ) =>
   firebase
     .firestore()
-    .collection("articles")
+    .collection(articles)
     .onSnapshot(
       snapshot => {
         const articles = snapshot.docs.map(toArticle);
@@ -36,23 +40,23 @@ const subscribe = (
     );
 
 const create = (data: Partial<Article>) =>
-  firebase.firestore().collection("articles").add(data);
+  firebase.firestore().collection(articles).add(data);
 
 const update = (id: string, data: Partial<Article>) =>
   firebase
     .firestore()
-    .collection("articles")
+    .collection(articles)
     .doc(id)
     .update({ ...data });
 
 const deleteArticle = (id: string) =>
-  firebase.firestore().collection("articles").doc(id).delete();
+  firebase.firestore().collection(articles).doc(id).delete();
 
 const uploadArticleImage = async (
   file: Blob | ArrayBuffer,
   fileName: string
 ) => {
-  const url = uploadImage(file, articleFileStoragePath, fileName);
+  const url = uploadImage(file, articles, fileName);
   return url;
 };
 

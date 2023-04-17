@@ -3,7 +3,7 @@ import { Article } from "../assets/icons/icons";
 import SiderNavigationBar from "../components/theme/components/SiderNavBar";
 import styled from "styled-components";
 import { BJContainer } from "../components/theme/atoms/BJContainer";
-import { articles } from "../routes/routeConsts";
+import { articles, karaokes } from "../routes/routeConsts";
 import { Outlet } from "react-router";
 const { Content } = Layout;
 
@@ -12,6 +12,11 @@ const menuItems = () => {
     {
       displayName: "Articles",
       url: articles,
+      icon: <Article />,
+    },
+    {
+      displayName: "Karaokes",
+      url: karaokes,
       icon: <Article />,
     },
   ];

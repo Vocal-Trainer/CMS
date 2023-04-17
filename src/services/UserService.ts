@@ -1,6 +1,5 @@
-import { httpsCallable } from "firebase/functions";
-import firebase, { functions } from "../firebase";
-import { cloudFunctionNames, firebaseCollectionNames } from "../utils";
+import firebase from "../firebase";
+import { firebaseCollectionNames } from "../utils";
 const { admins } = firebaseCollectionNames;
 
 const subscribe = (
@@ -53,71 +52,9 @@ const updateName = (userId: Admin["id"], name: string) =>
     .doc(userId)
     .set({ name }, { merge: true });
 
-const deleteUser = async (userId: string, comment: string, reason: string) => {
-  try {
-    const deleteUserCallable = httpsCallable(
-      functions,
-      cloudFunctionNames.deleteUser
-    );
-    const result = await deleteUserCallable({
-      uid: userId,
-      comment: comment,
-      reason: reason,
-    });
-    return result.data;
-  } catch (error) {
-    console.log("error occured while deleting record", error);
-    throw error;
-  }
-};
-
-const grantUserPermissions = async (userId: string, permissions: string[]) => {
-  try {
-    const grantUserPermissionsCallable = httpsCallable(
-      functions,
-      cloudFunctionNames.grantUserPermissions
-    );
-    const result = await grantUserPermissionsCallable({
-      uid: userId,
-      permissions: permissions,
-    });
-    return result.data;
-  } catch (error) {
-    console.log("error occured while up record", error);
-    throw error;
-  }
-};
-
-const registerWithEmailAndPassword = async (
-  displayName: string,
-  email: string,
-  password: string,
-  permissions: string[]
-) => {
-  try {
-    const createAuthUserWithClaims = httpsCallable(
-      functions,
-      cloudFunctionNames.createAuthUserWithClaims
-    );
-    const result = await createAuthUserWithClaims({
-      displayName,
-      email,
-      password,
-      permissions,
-    });
-    return result.data;
-  } catch (error) {
-    console.log("error occured while up record", error);
-    throw error;
-  }
-};
-
 export const UserService = {
   subscribe,
   exists,
   createUser,
   updateName,
-  deleteUser,
-  grantUserPermissions,
-  registerWithEmailAndPassword,
 };

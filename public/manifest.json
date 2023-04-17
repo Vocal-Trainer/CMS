@@ -1,21 +1,21 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Vocal CMS",
+  "name": "Vocal CMS",
   "icons": [
     {
-      "src": "babyjourney.png",
-      "sizes": "64x64 32x32 24x24 16x16",
+      "src": "Vocal.png",
+      "sizes": "56x64 32x32 24x24 16x16",
       "type": "image/x-icon"
     },
     {
-      "src": "logo192.png",
+      "src": "Vocal192.png",
       "type": "image/png",
-      "sizes": "192x192"
+      "sizes": "167x192"
     },
     {
-      "src": "logo512.png",
+      "src": "Vocal512.png",
       "type": "image/png",
-      "sizes": "512x512"
+      "sizes": "445x512"
     }
   ],
   "start_url": ".",

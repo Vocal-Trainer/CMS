@@ -6,27 +6,25 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { AspectRatio, formValidationError, valueOrNull } from "../../utils";
 import { FormEdit, FormEditType } from "./../../components";
-import { useArticle, useArticles } from "../../context";
-import { ArticleService } from "../../services";
+import { useKaraoke, useKaraokes } from "../../context";
+import { ArticleService, KaraokeService } from "../../services";
 import { commonErrors } from "../../language";
 import { ImagesCollapse } from "../../components/ImagesCollapse";
-import { BJMdFormItem } from "../../components/theme/molecules/formItems/BJFormMarkdown";
 import {
   BJDateInputItem,
   BJInputFormItem,
   BJSelectFormItem,
 } from "../../components/theme";
 
-export type FormValues = {
+type FormValues = {
   category: string;
   title: string;
   imageUrl: string | null;
-  squareImageUrl: string | null;
-  content: string;
-  shortDescription: string;
   source: string;
   author: string;
   publishedDate: string;
+  difficulty: string;
+  lyrics: string;
 };
 
 const { urlValidationError: urlError, requiredError } = commonErrors;
@@ -34,17 +32,18 @@ const { urlValidationError: urlError, requiredError } = commonErrors;
 const schema = yup.object().shape({
   title: yup.string().required(requiredError),
   imageUrl: yup.string().nullable().url(urlError),
+  stretchedImageUrl: yup.string().nullable().url(urlError),
   squareImageUrl: yup.string().nullable().url(urlError),
   category: yup.string().required(requiredError),
   content: yup.string().required(requiredError),
   shortDescription: yup.string().required(requiredError),
 });
 
-export const ArticlePage = () => {
+export const KaraokePage = () => {
   const navigate = useNavigate();
-  const { categories } = useArticles();
+  const { categories, difficulty } = useKaraokes();
   const { id } = useParams<string>();
-  const { article, loading } = useArticle(id);
+  const { karaoke, loading } = useKaraoke(id);
 
   const {
     formState,
@@ -59,29 +58,28 @@ export const ArticlePage = () => {
   });
 
   useEffect(() => {
-    if (loading || article === null) {
+    if (loading || karaoke === null) {
       return;
     }
-    reset({ ...article });
-  }, [article, loading, reset]);
+    reset({ ...karaoke });
+  }, [karaoke, loading, reset]);
 
   const onSubmit = async (data: FormValues) => {
-    const updatedArticle: Partial<Article> = {
+    const updated: Partial<Karaoke> = {
       category: data.category,
       title: data.title.trim(),
-      shortDescription: data.shortDescription,
-      content: data.content,
-      imageUrl: valueOrNull(data.imageUrl),
-      squareImageUrl: valueOrNull(data.squareImageUrl),
-      source: valueOrNull(data.source),
+      difficulty: data.difficulty,
       author: valueOrNull(data.author),
+      source: valueOrNull(data.source),
+      imageUrl: valueOrNull(data.imageUrl),
       publishedDate: valueOrNull(data.publishedDate),
+      lyrics: valueOrNull(data.lyrics),
     };
 
-    if (article) {
-      await ArticleService.update(id, updatedArticle);
+    if (karaoke) {
+      await KaraokeService.update(id, updated);
     } else {
-      const { id } = await ArticleService.create(updatedArticle);
+      const { id } = await KaraokeService.create(updated);
       return navigate(`../${id}`);
     }
   };
@@ -90,16 +88,12 @@ export const ArticlePage = () => {
     setValue("imageUrl", url, { shouldDirty: true });
   };
 
-  const handleUploadedSquareImageUrl = (url: string | null) => {
-    setValue("squareImageUrl", url, { shouldDirty: true });
-  };
-
   const onRemove = async () => {
-    if (article) {
-      await ArticleService.delete(article.id);
+    if (karaoke) {
+      await KaraokeService.delete(karaoke.id);
       navigate("./..", { replace: true });
     } else {
-      throw new Error("Article not found");
+      throw new Error("Karaoke not found");
     }
   };
 
@@ -111,9 +105,9 @@ export const ArticlePage = () => {
       onRemove={onRemove}
       hasValidationErrors={Object.keys(errors).length !== 0}
       enableSave={isDirty}
-      title={article ? article?.title : "New Article"}
-      id={article?.id}
-      editType={article?.id ? FormEditType.EDIT : FormEditType.ADD}
+      title={karaoke ? karaoke?.title : "New Karaoke"}
+      id={karaoke?.id}
+      editType={karaoke?.id ? FormEditType.EDIT : FormEditType.ADD}
       loading={loading}
       onSubmit={handleSubmit(onSubmit, formValidationError)}
       recordIdentifier={articleTitle}
@@ -136,19 +130,10 @@ export const ArticlePage = () => {
                 title: "Cover image 4:3",
                 setUploadUrl: handleUploadedImageUrl,
                 uploadImage: ArticleService.uploadArticleImage,
-                initialUrl: article?.imageUrl,
+                initialUrl: karaoke?.imageUrl,
                 lockedRatio: AspectRatio.FourToThree,
                 defaultCropBoxWidth: 300,
                 extra: "Best resolution for this would be 1280*960",
-              },
-              "Square image 1:1": {
-                title: "Square image 1:1",
-                setUploadUrl: handleUploadedSquareImageUrl,
-                uploadImage: ArticleService.uploadArticleImage,
-                initialUrl: article?.squareImageUrl,
-                lockedRatio: AspectRatio.OneToOne,
-                defaultCropBoxWidth: 300,
-                extra: "Best resolution for this would be 512*512",
               },
             }}
           />
@@ -169,6 +154,21 @@ export const ArticlePage = () => {
             }))}
             fieldName={"category"}
           />
+          <BJSelectFormItem
+            size="large"
+            control={control}
+            required={true}
+            error={!!errors.difficulty}
+            label={"Difficulty}"}
+            message={errors.difficulty?.message}
+            optionsList={difficulty.map(_c => ({
+              key: _c,
+              value: _c,
+              display: _c,
+            }))}
+            fieldName={"difficulty"}
+          />
+
           <BJInputFormItem
             control={control}
             error={!!errors.source}
@@ -190,7 +190,7 @@ export const ArticlePage = () => {
       </Row>
 
       <Divider />
-      <BJMdFormItem
+      {/* <BJMdFormItem
         disabled={false}
         setValue={setValue}
         control={control}
@@ -211,7 +211,7 @@ export const ArticlePage = () => {
         message={errors.content?.message}
         required={true}
         fieldName={"content"}
-      />
+      /> */}
     </FormEdit>
   );
 };

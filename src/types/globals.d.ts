@@ -9,19 +9,6 @@ interface Admin {
   freshAccount: boolean;
 }
 
-interface Article {
-  id: string;
-  title: string;
-  content: string;
-  shortDescription: string;
-  author: string;
-  source: string;
-  category: string;
-  imageUrl: string;
-  squareImageUrl: string;
-  publishedDate: string;
-}
-
 interface MenuItemInfo {
   displayName: string;
   url: string;
@@ -57,4 +44,47 @@ interface IListFilters {
   months: IFilter;
   types: IFilter;
   influencers: IFilter;
+}
+
+interface Article {
+  id: string;
+  title: string;
+  content: string;
+  shortDescription: string;
+  author: string;
+  source: string;
+  category: string;
+  imageUrl: string;
+  squareImageUrl: string;
+  publishedDate: string;
+}
+
+interface Competition {
+  id: string;
+  publishedDate: string;
+  lyrics: string;
+}
+
+interface Karaoke {
+  id: string;
+  title: string;
+  difficulty: string;
+  author: string;
+  source: string;
+  category: string;
+  imageUrl: string;
+  publishedDate: string;
+  lyrics: string;
+}
+
+interface Exercise {
+  id: string;
+  title: string;
+  subTitle: string;
+  content: string;
+  length: string;
+  day: string;
+  imageUrl: string;
+  exerciseUrl: string;
+  publishDate: string;
 }

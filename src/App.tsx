@@ -1,10 +1,5 @@
-import {
-  BrowserRouter as Router,
-  Navigate,
-  Route,
-  Routes,
-} from "react-router-dom";
-import { useAuth, useAuthToken } from "./context";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { useAuth } from "./context";
 import { Providers } from "./Providers";
 import "./styles/App.scss";
 import { theme } from "./components/theme/util/theme";

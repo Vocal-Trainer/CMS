@@ -1,13 +1,25 @@
 import { FC } from "react";
 
-import { ArticlesProvider, ApplicationCommonContextProvider } from "./context";
+import {
+  ArticlesProvider,
+  ApplicationCommonContextProvider,
+  ExercisesProvider,
+  KaraokesProvider,
+} from "./context";
 
 interface Props {
   children: any;
 }
 
 export const Providers = ({ children }: Props) => (
-  <Compose components={[ArticlesProvider, ApplicationCommonContextProvider]}>
+  <Compose
+    components={[
+      ArticlesProvider,
+      ExercisesProvider,
+      KaraokesProvider,
+      ApplicationCommonContextProvider,
+    ]}
+  >
     {children}
   </Compose>
 );
