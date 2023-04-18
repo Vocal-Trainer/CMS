@@ -22,7 +22,6 @@ type FormValues = {
   imageUrl: string | null;
   source: string;
   author: string;
-  publishedDate: string;
   difficulty: string;
   lyrics: string;
 };
@@ -30,13 +29,12 @@ type FormValues = {
 const { urlValidationError: urlError, requiredError } = commonErrors;
 
 const schema = yup.object().shape({
+  category: yup.string().required(requiredError),
   title: yup.string().required(requiredError),
   imageUrl: yup.string().nullable().url(urlError),
-  category: yup.string().required(requiredError),
+  author: yup.string().required(requiredError),
   difficulty: yup.string().required(requiredError),
   lyrics: yup.string().required(requiredError),
-  author: yup.string().required(requiredError),
-  publishedDate: yup.string().required(requiredError),
 });
 
 export const KaraokePage = () => {
@@ -72,7 +70,7 @@ export const KaraokePage = () => {
       author: valueOrNull(data.author),
       source: valueOrNull(data.source),
       imageUrl: valueOrNull(data.imageUrl),
-      publishedDate: valueOrNull(data.publishedDate),
+      publishedDate: new Date().toISOString(),
       lyrics: valueOrNull(data.lyrics),
     };
 
@@ -198,15 +196,6 @@ export const KaraokePage = () => {
             label={"Source"}
             message={errors.source?.message}
             fieldName={"source"}
-            required={false}
-          />
-
-          <BJDateInputItem
-            control={control}
-            error={!!errors.publishedDate}
-            label={"Publish date"}
-            message={errors.publishedDate?.message}
-            fieldName={"publishedDate"}
             required={false}
           />
         </Col>

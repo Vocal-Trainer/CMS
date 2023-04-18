@@ -25,14 +25,18 @@ type FormValues = {
   day: string;
   imageUrl: string | null;
   exerciseUrl: string;
-  publishedDate: string;
 };
 
 const { urlValidationError: urlError, requiredError } = commonErrors;
 
 const schema = yup.object().shape({
   title: yup.string().required(requiredError),
+  subTitle: yup.string().required(requiredError),
+  content: yup.string().required(requiredError),
+  length: yup.string().required(requiredError),
+  day: yup.string().required(requiredError),
   imageUrl: yup.string().nullable().url(urlError),
+  exerciseUrl: yup.string().required(requiredError),
 });
 
 export const ExercisePage = () => {
@@ -180,15 +184,6 @@ export const ExercisePage = () => {
             message={errors.exerciseUrl?.message}
             fieldName={"exerciseUrl"}
             required={true}
-          />
-
-          <BJDateInputItem
-            control={control}
-            error={!!errors.day}
-            label={"Publish date"}
-            message={errors.publishedDate?.message}
-            fieldName={"publishedDate"}
-            required={false}
           />
         </Col>
       </Row>

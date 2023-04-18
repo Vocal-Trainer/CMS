@@ -26,7 +26,6 @@ export type FormValues = {
   shortDescription: string;
   source: string;
   author: string;
-  publishedDate: string;
 };
 
 const { urlValidationError: urlError, requiredError } = commonErrors;
@@ -75,7 +74,7 @@ export const ArticlePage = () => {
       squareImageUrl: valueOrNull(data.squareImageUrl),
       source: valueOrNull(data.source),
       author: valueOrNull(data.author),
-      publishedDate: valueOrNull(data.publishedDate),
+      publishedDate: new Date().toISOString(),
     };
 
     if (article) {
@@ -175,15 +174,6 @@ export const ArticlePage = () => {
             label={"source"}
             message={errors.source?.message}
             fieldName={"source"}
-            required={false}
-          />
-
-          <BJDateInputItem
-            control={control}
-            error={!!errors.publishedDate}
-            label={"Publish date"}
-            message={errors.publishedDate?.message}
-            fieldName={"publishedDate"}
             required={false}
           />
         </Col>
