@@ -214,7 +214,7 @@ const Sticky = styled(Row)`
   padding: 20px;
   background-color: white;
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
-  z-index: 9999;
+  z-index: 2;
   border-radius: 25px;
 `;
 
