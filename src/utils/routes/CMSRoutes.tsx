@@ -7,8 +7,15 @@ import {
   KaraokePage,
   ExerciseListPage,
   ExercisePage,
+  CompetitionListPage,
+  CompetitionPage,
 } from "../../pages";
-import { articles, karaokes, exercises } from "../../routes/routeConsts";
+import {
+  articles,
+  karaokes,
+  exercises,
+  competitions,
+} from "../../routes/routeConsts";
 
 export const CMSRoutes = () => {
   return (
@@ -23,6 +30,11 @@ export const CMSRoutes = () => {
           <Route path={""} element={<KaraokeListPage />} />
           <Route path={"new"} element={<KaraokePage />} />
           <Route path={":id"} element={<KaraokePage />} />
+        </Route>
+        <Route path={competitions}>
+          <Route path={""} element={<CompetitionListPage />} />
+          <Route path={"new"} element={<CompetitionPage />} />
+          <Route path={":id"} element={<CompetitionPage />} />
         </Route>
         <Route path={exercises}>
           <Route path={""} element={<ExerciseListPage />} />

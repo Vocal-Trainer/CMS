@@ -123,7 +123,7 @@ const BJList = <T,>({
             )
           ) : undefined
         }
-        inputPlaceholder={`Sök bland ${OriginalList?.length} ${recordCountSuffix}...`}
+        inputPlaceholder={`Search ${OriginalList?.length} ${recordCountSuffix}...`}
         title={title}
         create={false}
         value={searchQuery}

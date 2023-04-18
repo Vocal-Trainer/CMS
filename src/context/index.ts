@@ -3,3 +3,4 @@ export * from "./AuthContext";
 export * from "./ApplicationCommonContext";
 export * from "./ExerciseContext";
 export * from "./KaraokeContext";
+export * from "./CompetitionContext";

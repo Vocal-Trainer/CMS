@@ -6,6 +6,7 @@ export const firebaseCollectionNames = {
   competitions: "competitions",
   exercises: "exercises",
   karaokes: "karaokes",
+  participants: "participants",
 };
 
 export const scraperMessages = {

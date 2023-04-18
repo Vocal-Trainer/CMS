@@ -1,27 +1,27 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useArticles } from "../../context";
+import { useExercises } from "../../context";
 import { BJColumnType } from "../../components/theme/molecules/BJTable";
 import { Sorter } from "../../components/theme/util/sorter";
 import BJList from "../../components/theme/components/BJList";
+import { useCompetitions } from "../../context/CompetitionContext";
 
 interface DataSourceType extends Competition {
   key: string;
 }
 
-export const ArticleListPage = () => {
+export const CompetitionListPage = () => {
   const navigate = useNavigate();
-  const { articles, loading } = useArticles();
+  const { competitions, loading } = useCompetitions();
   const [originalTable, setOriginalTable] = useState<DataSourceType[]>([]);
 
   useEffect(() => {
-    const _tableSource: DataSourceType[] = articles.map(article => ({
-      ...article,
-      key: article.id,
-      category: article.category,
+    const _tableSource: DataSourceType[] = competitions.map(_e => ({
+      ..._e,
+      key: _e.id,
     }));
     setOriginalTable(_tableSource);
-  }, [articles]);
+  }, [competitions]);
 
   const onClickRow = (record: DataSourceType) => {
     return {
@@ -31,7 +31,7 @@ export const ArticleListPage = () => {
     };
   };
 
-  const handleNewArticle = () => {
+  const handleNewCompetition = () => {
     navigate("new");
   };
 
@@ -48,9 +48,9 @@ export const ArticleListPage = () => {
       },
     },
     {
-      title: "Category",
-      dataIndex: "category",
-      key: "category",
+      title: "isActive",
+      dataIndex: "isActive",
+      key: "isActive",
       width: 1,
       ellipsis: true,
       sorter: {
@@ -63,13 +63,13 @@ export const ArticleListPage = () => {
     <BJList
       loading={loading}
       filterOnlyDisplayList
-      addButtonCaption={"New Article"}
-      title={"Article"}
+      addButtonCaption={"New Competition"}
+      title={"Competition"}
       OriginalList={originalTable}
       columns={columns}
       onClickRow={onClickRow}
-      onclick={handleNewArticle}
-      recordCountSuffix={"Articles"}
+      onclick={handleNewCompetition}
+      recordCountSuffix={"Competitions"}
     />
   );
 };

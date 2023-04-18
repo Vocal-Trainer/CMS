@@ -59,12 +59,6 @@ interface Article {
   publishedDate: string;
 }
 
-interface Competition {
-  id: string;
-  publishedDate: string;
-  lyrics: string;
-}
-
 interface Karaoke {
   id: string;
   title: string;
@@ -87,4 +81,21 @@ interface Exercise {
   imageUrl: string;
   exerciseUrl: string;
   publishDate: string;
+}
+
+interface Competition {
+  id: string;
+  lyrics: string;
+  isActive: boolean;
+  imageUrl: string;
+  title: string;
+  maxPoint: number;
+  publishedDate: string;
+}
+
+interface Participant {
+  id: string;
+  name: string;
+  point: number;
+  competitionId: string;
 }
