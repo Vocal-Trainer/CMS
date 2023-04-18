@@ -135,14 +135,14 @@ export const ExercisePage = () => {
           <ImagesCollapse
             title="Image URL"
             config={{
-              "Cover image 4:2": {
-                title: "Square image 4:2",
+              "Banner image 2:1": {
+                title: "Banner image 2:1",
                 setUploadUrl: handleUploadedImageUrl,
                 uploadImage: ExerciseService.uploadExerciseImage,
                 initialUrl: exercise?.imageUrl,
-                lockedRatio: AspectRatio.OneToOne,
+                lockedRatio: AspectRatio.TwoToOne,
                 defaultCropBoxWidth: 300,
-                extra: "Best resolution for this would be 600*600",
+                extra: "Best resolution for this would be 600*300",
               },
             }}
           />
