@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useExercises } from "../../context";
 import { BJColumnType } from "../../components/theme/molecules/BJTable";
 import { Sorter } from "../../components/theme/util/sorter";
 import BJList from "../../components/theme/components/BJList";

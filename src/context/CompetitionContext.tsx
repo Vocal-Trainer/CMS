@@ -31,7 +31,6 @@ export const CompetitionProvider = ({ ...rest }) => {
 
   useEffect(() => {
     setLoading(true);
-
     const unsubExercises = CompetitionsService.subscribe(
       (_error, _competitions) => {
         setCompetitions(_competitions);
@@ -54,12 +53,13 @@ export const CompetitionProvider = ({ ...rest }) => {
   );
 
   const getParticipant = useCallback(async (id: Competition["id"]) => {
-    const _participants = await CompetitionsService.subscribeParticipants(id);
-    if (typeof _participants === "string") {
-      return [];
-    } else {
-      return _participants as Participant[];
-    }
+    return CompetitionsService.subscribeParticipants(id)
+      .then(_participants => {
+        return (_participants as Participant[]) ?? [];
+      })
+      .catch(() => {
+        return [];
+      });
   }, []);
 
   const value = useMemo(

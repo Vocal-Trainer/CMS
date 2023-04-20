@@ -5,6 +5,7 @@ import {
   ApplicationCommonContextProvider,
   ExercisesProvider,
   KaraokesProvider,
+  CompetitionProvider,
 } from "./context";
 
 interface Props {
@@ -17,6 +18,7 @@ export const Providers = ({ children }: Props) => (
       ArticlesProvider,
       ExercisesProvider,
       KaraokesProvider,
+      CompetitionProvider,
       ApplicationCommonContextProvider,
     ]}
   >

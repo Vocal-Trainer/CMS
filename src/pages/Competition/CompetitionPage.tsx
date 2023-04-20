@@ -12,13 +12,14 @@ import { ImagesCollapse } from "../../components/ImagesCollapse";
 import { BJInputFormItem, BJSwitchFormItem } from "../../components/theme";
 import { useCompetition } from "../../context/CompetitionContext";
 import { ParticipantListItem } from "./ParticipantListItem";
+import Paragraph from "antd/lib/typography/Paragraph";
 
 type FormValues = {
-  lyrics: string;
-  isActive: boolean;
-  imageUrl: string;
   title: string;
+  imageUrl: string;
+  isActive: boolean;
   maxPoint: number;
+  lyrics: string;
 };
 
 const { urlValidationError: urlError, requiredError } = commonErrors;
@@ -27,7 +28,7 @@ const schema = yup.object().shape({
   title: yup.string().required(requiredError),
   imageUrl: yup.string().nullable().url(urlError),
   maxPoint: yup.number().required(requiredError),
-  lyrics: yup.string().nullable().url(urlError),
+  lyrics: yup.string().required(requiredError),
   isActive: yup.boolean().required(requiredError),
 });
 
@@ -60,8 +61,8 @@ export const CompetitionPage = () => {
       title: valueOrNull(data.title),
       imageUrl: valueOrNull(data.imageUrl),
       lyrics: valueOrNull(data.lyrics),
-      isActive: valueOrNull(data.isActive),
-      maxPoint: valueOrNull(data.maxPoint),
+      isActive: data.isActive,
+      maxPoint: data.maxPoint,
       publishedDate: new Date().toISOString(),
     };
 
@@ -116,14 +117,14 @@ export const CompetitionPage = () => {
           <ImagesCollapse
             title="Image URL"
             config={{
-              "Cover image 4:2": {
-                title: "Square image 4:2",
+              "Cover image 2:1": {
+                title: "Square image 2:1",
                 setUploadUrl: handleUploadedImageUrl,
                 uploadImage: CompetitionsService.uploadCompetitionImage,
                 initialUrl: competition?.imageUrl,
-                lockedRatio: AspectRatio.OneToOne,
+                lockedRatio: AspectRatio.TwoToOne,
                 defaultCropBoxWidth: 300,
-                extra: "Best resolution for this would be 600*600",
+                extra: "Best resolution for this would be 1200*600",
               },
             }}
           />
@@ -161,6 +162,7 @@ export const CompetitionPage = () => {
         rows={20}
       />
       <Divider />
+      <Paragraph>Participants</Paragraph>
       {competition && (
         <List bordered>
           {participants.map(content => (
