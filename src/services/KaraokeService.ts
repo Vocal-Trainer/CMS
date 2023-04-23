@@ -17,6 +17,7 @@ const toExercise = (
     category: data.category,
     imageUrl: data.imageUrl || null,
     publishedDate: data.publishedDate,
+    pitchData: data.pitchData,
     lyrics: data.lyrics,
   };
 };

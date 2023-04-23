@@ -5,11 +5,19 @@ const { competitions, participants } = firebaseCollectionNames;
 
 const toCompetition = (
   doc: firebase.firestore.QueryDocumentSnapshot<firebase.firestore.DocumentData>
-) => {
+): Competition => {
+  const data = doc.data();
+
   return {
     id: doc.id,
-    ...doc.data(),
-  } as Competition;
+    lyrics: data.lyrics,
+    isActive: data.isActive,
+    imageUrl: data.imageUrl,
+    title: data.title,
+    maxPoint: data.maxPoint,
+    pitchData: data.pitchData,
+    publishedDate: data.publishedDate,
+  };
 };
 
 const toParticipants = (

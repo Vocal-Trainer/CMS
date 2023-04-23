@@ -17,6 +17,7 @@ const toExercise = (
     day: data.day,
     imageUrl: data.imageUrl || null,
     exerciseUrl: data.exerciseUrl,
+    pitchData: data.pitchData,
     publishDate: data.publishDate,
   };
 };

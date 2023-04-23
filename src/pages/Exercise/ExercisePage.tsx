@@ -10,11 +10,7 @@ import { useExercise } from "../../context";
 import { ExerciseService, KaraokeService } from "../../services";
 import { commonErrors } from "../../language";
 import { ImagesCollapse } from "../../components/ImagesCollapse";
-import {
-  BJDateInputItem,
-  BJInputFormItem,
-  BJSelectFormItem,
-} from "../../components/theme";
+import { BJInputFormItem, BJSelectFormItem } from "../../components/theme";
 import { BJMdFormItem } from "../../components/theme/molecules/formItems/BJFormMarkdown";
 
 type FormValues = {
@@ -25,6 +21,7 @@ type FormValues = {
   day: string;
   imageUrl: string | null;
   exerciseUrl: string;
+  pitchData: string;
 };
 
 const { urlValidationError: urlError, requiredError } = commonErrors;
@@ -37,6 +34,7 @@ const schema = yup.object().shape({
   day: yup.string().required(requiredError),
   imageUrl: yup.string().nullable().url(urlError),
   exerciseUrl: yup.string().required(requiredError),
+  pitchData: yup.string().required(requiredError),
 });
 
 export const ExercisePage = () => {
@@ -72,6 +70,7 @@ export const ExercisePage = () => {
       day: valueOrNull(data.day),
       imageUrl: valueOrNull(data.imageUrl),
       exerciseUrl: valueOrNull(data.exerciseUrl),
+      pitchData: valueOrNull(data.pitchData),
       publishDate: new Date().toISOString(),
     };
 
@@ -197,6 +196,16 @@ export const ExercisePage = () => {
         message={errors.content?.message}
         required={true}
         fieldName={"content"}
+      />
+      <BJInputFormItem
+        control={control}
+        error={!!errors?.pitchData}
+        label={"Pitch Array"}
+        message={errors.pitchData?.message}
+        required={true}
+        autoFocus
+        rows={20}
+        fieldName={"pitchData"}
       />
     </FormEdit>
   );

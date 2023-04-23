@@ -20,6 +20,7 @@ type FormValues = {
   isActive: boolean;
   maxPoint: number;
   lyrics: string;
+  pitchData: string;
 };
 
 const { urlValidationError: urlError, requiredError } = commonErrors;
@@ -30,6 +31,7 @@ const schema = yup.object().shape({
   maxPoint: yup.number().required(requiredError),
   lyrics: yup.string().required(requiredError),
   isActive: yup.boolean().required(requiredError),
+  pitchData: yup.string().required(requiredError),
 });
 
 export const CompetitionPage = () => {
@@ -63,6 +65,7 @@ export const CompetitionPage = () => {
       lyrics: valueOrNull(data.lyrics),
       isActive: data.isActive,
       maxPoint: data.maxPoint,
+      pitchData: valueOrNull(data.pitchData),
       publishedDate: new Date().toISOString(),
     };
 
@@ -160,6 +163,17 @@ export const CompetitionPage = () => {
         autoFocus
         fieldName={"lyrics"}
         rows={20}
+      />
+
+      <BJInputFormItem
+        control={control}
+        error={!!errors?.pitchData}
+        label={"Pitch Array"}
+        message={errors.pitchData?.message}
+        required={true}
+        autoFocus
+        rows={20}
+        fieldName={"pitchData"}
       />
       <Divider />
       <Paragraph>Participants</Paragraph>

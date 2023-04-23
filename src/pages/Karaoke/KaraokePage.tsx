@@ -10,11 +10,7 @@ import { useKaraoke, useKaraokes } from "../../context";
 import { KaraokeService } from "../../services";
 import { commonErrors } from "../../language";
 import { ImagesCollapse } from "../../components/ImagesCollapse";
-import {
-  BJDateInputItem,
-  BJInputFormItem,
-  BJSelectFormItem,
-} from "../../components/theme";
+import { BJInputFormItem, BJSelectFormItem } from "../../components/theme";
 
 type FormValues = {
   category: string;
@@ -24,6 +20,7 @@ type FormValues = {
   author: string;
   difficulty: string;
   lyrics: string;
+  pitchData: string;
 };
 
 const { urlValidationError: urlError, requiredError } = commonErrors;
@@ -35,6 +32,7 @@ const schema = yup.object().shape({
   author: yup.string().required(requiredError),
   difficulty: yup.string().required(requiredError),
   lyrics: yup.string().required(requiredError),
+  pitchData: yup.string().required(requiredError),
 });
 
 export const KaraokePage = () => {
@@ -70,8 +68,9 @@ export const KaraokePage = () => {
       author: valueOrNull(data.author),
       source: valueOrNull(data.source),
       imageUrl: valueOrNull(data.imageUrl),
-      publishedDate: new Date().toISOString(),
       lyrics: valueOrNull(data.lyrics),
+      pitchData: valueOrNull(data.pitchData),
+      publishedDate: new Date().toISOString(),
     };
 
     if (karaoke) {
@@ -200,6 +199,18 @@ export const KaraokePage = () => {
           />
         </Col>
       </Row>
+
+      <Divider />
+      <BJInputFormItem
+        control={control}
+        error={!!errors?.pitchData}
+        label={"Pitch Array"}
+        message={errors.pitchData?.message}
+        required={true}
+        autoFocus
+        rows={20}
+        fieldName={"pitchData"}
+      />
     </FormEdit>
   );
 };

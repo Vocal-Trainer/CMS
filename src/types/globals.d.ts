@@ -68,6 +68,7 @@ interface Karaoke {
   category: string;
   imageUrl: string;
   publishedDate: string;
+  pitchData: string;
   lyrics: string;
 }
 
@@ -80,6 +81,7 @@ interface Exercise {
   day: string;
   imageUrl: string;
   exerciseUrl: string;
+  pitchData: string;
   publishDate: string;
 }
 
@@ -90,6 +92,7 @@ interface Competition {
   imageUrl: string;
   title: string;
   maxPoint: number;
+  pitchData: string;
   publishedDate: string;
 }
 

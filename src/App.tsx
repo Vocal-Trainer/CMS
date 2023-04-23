@@ -26,7 +26,7 @@ export const App = () => {
               <Route path="/*" element={<LoginPage />} />
             ) : (
               <Route path="*" element={<BJMainLayout />}>
-                <Route path="cms/*" element={<CMSRoutes />} />
+                <Route path="*" element={<CMSRoutes />} />
               </Route>
             )}
           </Routes>
